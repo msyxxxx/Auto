@@ -245,8 +245,6 @@ async function logout() {
 
 async function boot() {
   const { data: { session } } = await sb.auth.getSession();
-  
-  // إذا لم يكن هناك جلسة، انتقل لصفحة تسجيل الدخول
   if (!session) {
     window.location.href = 'login.html';
     return;
@@ -318,10 +316,22 @@ $('cImgFile').onchange = e => {
     const r = new FileReader(); r.onload = () => { PENDING_IMAGES.push({ file: f, dataUrl: r.result }); renderImagePreview(); }; r.readAsDataURL(f);
   }); e.target.value = '';
 };
+
+// تم إصلاح مشكلة الفيديو هنا باستخدام ObjectURL بدلاً من FileReader
 $('cVideoFile').onchange = e => {
-  const f = e.target.files[0]; if (!f) return;
+  const f = e.target.files[0]; 
+  if (!f) return;
   if (f.size > 50 * 1024 * 1024) return toast('الفيديو كبير (الحد 50MB)', 'err');
-  const r = new FileReader(); r.onload = () => { PENDING_VIDEO = { file: f, dataUrl: r.result }; renderVideoPreview(); }; r.readAsDataURL(f); e.target.value = '';
+  
+  // إلغاء الرابط القديم إذا وجد لتوفير الذاكرة
+  if (PENDING_VIDEO && PENDING_VIDEO.dataUrl) {
+    URL.revokeObjectURL(PENDING_VIDEO.dataUrl);
+  }
+
+  const objectUrl = URL.createObjectURL(f); 
+  PENDING_VIDEO = { file: f, dataUrl: objectUrl }; 
+  renderVideoPreview(); 
+  e.target.value = '';
 };
 
 function renderImagePreview() {
@@ -331,10 +341,16 @@ function renderImagePreview() {
   $('imgPreview').innerHTML = ex + pd + mn;
 }
 function renderVideoPreview() {
-  $('videoPreview').innerHTML = !PENDING_VIDEO ? '' : `<div class="media-item" style="width:110px;height:70px"><video src="${PENDING_VIDEO.dataUrl}" muted></video><button type="button" class="rm" onclick="PENDING_VIDEO=null;renderVideoPreview()">✕</button></div>`;
+  $('videoPreview').innerHTML = !PENDING_VIDEO ? '' : `<div class="media-item" style="width:110px;height:70px"><video src="${PENDING_VIDEO.dataUrl}" muted></video><button type="button" class="rm" onclick="removePendingVideo()">✕</button></div>`;
 }
+
 window.removeExistingImage = i => { EXISTING_IMAGES.splice(i,1); renderImagePreview(); };
 window.removePendingImage = i => { PENDING_IMAGES.splice(i,1); renderImagePreview(); };
+window.removePendingVideo = () => {
+  if (PENDING_VIDEO && PENDING_VIDEO.dataUrl) URL.revokeObjectURL(PENDING_VIDEO.dataUrl);
+  PENDING_VIDEO = null; 
+  renderVideoPreview();
+};
 $('cImg').oninput = renderImagePreview;
 
 $('cForm').onsubmit = async e => {
@@ -391,7 +407,10 @@ function editCar(id) {
 
 function cancelEdit() {
   EDIT_ID = null; $('cForm').reset(); $('cEmoji').value = '🚗'; $('cMileage').value = 0; $('cRate').value = 4.5;
-  EXISTING_IMAGES = []; PENDING_IMAGES = []; PENDING_VIDEO = null; renderImagePreview(); renderVideoPreview();
+  EXISTING_IMAGES = []; PENDING_IMAGES = []; 
+  if (PENDING_VIDEO && PENDING_VIDEO.dataUrl) URL.revokeObjectURL(PENDING_VIDEO.dataUrl);
+  PENDING_VIDEO = null; 
+  renderImagePreview(); renderVideoPreview();
   $('formTitle').textContent = '➕ إضافة سيارة جديدة'; $('saveBtn').textContent = 'حفظ السيارة';
 }
 
