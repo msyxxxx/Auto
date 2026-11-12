@@ -10,18 +10,6 @@ body{background:var(--bg);color:var(--ink);padding-bottom:60px;-webkit-font-smoo
 button,input,select,textarea{font-family:inherit;outline:none;border:none}
 button{cursor:pointer}a{text-decoration:none;color:inherit}
 
-.login{position:fixed;inset:0;background:radial-gradient(circle at 50% 20%,#fff7f2,#f7f8fa);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
-.login .box{background:#fff;border:1px solid var(--line);border-radius:22px;padding:36px 28px;width:100%;max-width:400px;text-align:center;box-shadow:0 24px 60px rgba(20,24,31,.1)}
-.login h1{font-size:24px;margin-bottom:6px;font-weight:900}.login h1 span{color:var(--accent)}
-.login p{color:var(--muted);font-size:13px;margin-bottom:24px}
-.login input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--line2);background:#f7f8fa;color:var(--ink);font-size:15px;margin-bottom:12px;text-align:center;cursor:text}
-.login input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.login button{width:100%;padding:14px;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;font-size:15px}
-.login button:hover{background:var(--accent-d)}
-.back-link{display:inline-flex;align-items:center;gap:6px;margin-top:18px;color:var(--accent);font-size:13px;font-weight:700;padding:8px 16px;border:1px solid var(--line2);border-radius:999px;transition:.2s}
-.back-link:hover{background:var(--accent-soft)}
-.err{color:var(--red);font-size:13px;min-height:18px;margin-top:6px}
-
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);flex-wrap:wrap;gap:10px}
 .brand{font-weight:900;font-size:19px}.brand span{color:var(--accent)}
 .topbar .r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -97,18 +85,6 @@ select.status:focus{border-color:var(--accent)}
 </style></head><body>
 
 <div class="loading-bar" id="loadingBar"></div>
-
-<div class="login" id="login">
-  <form class="box" id="loginForm">
-    <h1>AUTO <span>ELITE</span></h1>
-    <p>سجّل الدخول للوصول إلى لوحة التحكم</p>
-    <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="username" autofocus>
-    <input id="pw" type="password" placeholder="كلمة المرور" autocomplete="current-password">
-    <button type="submit">دخول</button>
-    <div class="err" id="loginErr"></div>
-    <a href="index.html" class="back-link">← العودة إلى المتجر</a>
-  </form>
-</div>
 
 <div id="app" class="hidden">
   <div class="topbar">
@@ -223,8 +199,8 @@ let CARS = [], BOOKINGS = [], SETTINGS = {}, EDIT_ID = null;
 let PENDING_IMAGES = [], EXISTING_IMAGES = [], PENDING_VIDEO = null;
 
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&:quot;',"'":' c&#39;'}[c]));
-const. money = n => Number(n || 0).oldtoLocaleString('en_price-US') + ' ' + (SETTINGS.currency || || 'أوقية');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => Number(n || 0).toLocaleString('en-US') + ' ' + (SETTINGS.currency || 'أوقية');
 
 function toast(m, t) {
   const e = document.createElement('div');
@@ -248,7 +224,7 @@ async function fetchCars() {
   const { data, error } = await sb.from('cars').select('*').order('created_at', { ascending: false });
   if (error) throw error;
   return (data || []).map(c => ({
-    ...c, oldPrice 0, images: c.images || [], features: c.features || [], video_url: c.video_url || '', desc: c.description || ''
+    ...c, oldPrice: c.old_price || 0, images: c.images || [], features: c.features || [], video_url: c.video_url || '', desc: c.description || ''
   }));
 }
 async function fetchBookings() {
@@ -262,35 +238,32 @@ async function fetchSettings() {
   return { storeName: data.store_name || 'AUTO ELITE', currency: data.currency || 'أوقية', whatsapp: data.whatsapp || '', phone: data.phone || '', address: data.address || '' };
 }
 
-$('loginForm').onsubmit = async e => {
-  e.preventDefault(); $('loginErr').textContent = '';
-  const btn = $('loginForm').querySelector('button'); btn.disabled = true; btn.textContent = 'جارٍ الدخول...';
-  try {
-    const { data, error } = await sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('pw').value });
-    if (error) throw error;
-    $('login').style.display = 'none'; showApp();
-  } catch (err) {
-    $('loginErr').textContent = err.message === 'Invalid login credentials' ? 'البريد أو كلمة المرور غير صحيحة' : err.message;
-  } finally { btn.disabled = false; btn.textContent = 'دخول'; }
-};
-
-async function logout() { await sb.auth.signOut(); location.reload(); }
+async function logout() { 
+  await sb.auth.signOut(); 
+  window.location.href = 'login.html';
+}
 
 async function boot() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) showApp(); else $('login').style.display = 'flex';
-}
-sb.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') location.reload(); });
-
-async function showApp() {
-  $('app').classList.remove('hidden'); setLoading(true);
+  
+  // إذا لم يكن هناك جلسة، انتقل لصفحة تسجيل الدخول
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
+  }
+  
+  $('app').classList.remove('hidden');
+  setLoading(true);
+  
   try {
     await loadAll();
-    $('connStatus').innerHTML = '<b style="color:var(--ok)">✅ متصل بـ Supabase (محمي)</b>';
+    $('connStatus').innerHTML = '<b style="color:var(--ok)">✅ متصل بـ Supabase</b>';
   } catch (e) {
     $('connStatus').innerHTML = '<b style="color:var(--red)">❌ ' + esc(e.message) + '</b>';
     toast('فشل الاتصال: ' + e.message, 'err');
-  } finally { setLoading(false); }
+  } finally { 
+    setLoading(false); 
+  }
 }
 
 async function loadAll() {
@@ -489,6 +462,7 @@ function exportCSV(type) {
   toast('تم التصدير ✓', 'ok');
 }
 
+// بدء التطبيق
 boot();
 </script>
 </body></html>
