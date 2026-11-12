@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AUTO ELITE — لوحة التحكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f8fa;--white:#fff;--line:#eceef2;--line2:#e2e5eb;--ink:#14181f;--ink2:#3a4150;--muted:#848c9c;--accent:#ff6a1a;--accent-soft:#fff1e8;--accent-d:#e5540a;--gold:#f5b942;--ok:#16a34a;--red:#ef4444;--shadow:0 4px 18px rgba(20,24,31,.06)}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Tajawal,sans-serif}
+body{background:var(--bg);color:var(--ink);padding-bottom:60px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;outline:none;border:none}
+button{cursor:pointer}a{text-decoration:none;color:inherit}
+
+.login{position:fixed;inset:0;background:radial-gradient(circle at 50% 20%,#fff7f2,#f7f8fa);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
+.login .box{background:#fff;border:1px solid var(--line);border-radius:22px;padding:36px 28px;width:100%;max-width:400px;text-align:center;box-shadow:0 24px 60px rgba(20,24,31,.1)}
+.login h1{font-size:24px;margin-bottom:6px;font-weight:900}.login h1 span{color:var(--accent)}
+.login p{color:var(--muted);font-size:13px;margin-bottom:24px}
+.login input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--line2);background:#f7f8fa;color:var(--ink);font-size:15px;margin-bottom:12px;text-align:center;cursor:text}
+.login input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.login button{width:100%;padding:14px;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;font-size:15px}
+.login button:hover{background:var(--accent-d)}
+.back-link{display:inline-flex;align-items:center;gap:6px;margin-top:18px;color:var(--accent);font-size:13px;font-weight:700;padding:8px 16px;border:1px solid var(--line2);border-radius:999px;transition:.2s}
+.back-link:hover{background:var(--accent-soft)}
+.err{color:var(--red);font-size:13px;min-height:18px;margin-top:6px}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);flex-wrap:wrap;gap:10px}
+.brand{font-weight:900;font-size:19px}.brand span{color:var(--accent)}
+.topbar .r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{padding:10px 16px;border-radius:11px;background:var(--accent);color:#fff;font-weight:800;font-size:13.5px;white-space:nowrap;transition:.2s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--accent-d)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line2)}
+.btn.ghost:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btn.danger{background:#fef2f2;color:var(--red);border:1px solid #fecaca}
+.btn.danger:hover{background:var(--red);color:#fff}
+.btn.sm{padding:6px 11px;font-size:12px;border-radius:9px}
+.btn:disabled{opacity:.6;cursor:wait}
+.shell{max-width:1300px;margin:0 auto;padding:20px}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.stat::before{content:"";position:absolute;top:0;right:0;width:4px;height:100%;background:var(--accent)}
+.stat .l{font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.stat b{font-size:24px;color:var(--ink);display:block;font-weight:900}
+.stat.warn::before{background:var(--gold)}.stat.warn b{color:#c8870a}
+.stat.info::before{background:#3b82f6}.stat.info b{color:#2563eb}
+.stat.ok::before{background:var(--ok)}.stat.ok b{color:var(--ok)}
+
+.tabs{display:flex;gap:8px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px}
+.tab-btn{padding:11px 18px;border-radius:12px;background:#fff;border:1px solid var(--line2);color:var(--muted);font-weight:700;font-size:13.5px;white-space:nowrap;transition:.2s}
+.tab-btn:hover{color:var(--accent);border-color:var(--accent)}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tab{display:none}.tab.active{display:block}
+
+.pform{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:20px;box-shadow:var(--shadow)}
+.fh{font-weight:800;font-size:15px;margin-bottom:16px;color:var(--accent);display:flex;align-items:center;gap:8px}
+.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.frow input,.frow select,.frow textarea{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line2);background:#f7f8fa;color:var(--ink);font-size:13.5px;cursor:text}
+.frow select{cursor:pointer}
+.frow input:focus,.frow select:focus,.frow textarea:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.frow input[type=file]{padding:8px;font-size:12px;color:var(--muted);cursor:pointer;background:#fff}
+.frow input::placeholder,.frow textarea::placeholder{color:#a8b0bf}
+.factions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink2);padding:11px 0;font-weight:600}
+.chk input{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+.media-box{margin-top:12px;padding:12px;background:#f7f8fa;border:1px dashed var(--line2);border-radius:12px}
+.media-box .label{font-size:12.5px;font-weight:800;color:var(--ink2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.media-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.media-item{position:relative;width:70px;height:60px;border-radius:10px;overflow:hidden;border:2px solid var(--accent-soft);background:#fff}
+.media-item img,.media-item video{width:100%;height:100%;object-fit:cover}
+.media-item .rm{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
+.media-item.existing{border-color:#c8d2de}
+
+.tablewrap{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.thead{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line);gap:10px;flex-wrap:wrap}
+.thead h3{font-size:15px;font-weight:800}
+.thead input{padding:9px 14px;border-radius:10px;border:1px solid var(--line2);background:#f7f8fa;color:var(--ink);font-size:13px;min-width:180px;cursor:text}
+.thead input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px 14px;text-align:right;font-size:13px;border-bottom:1px solid var(--line)}
+th{background:#f7f8fa;color:var(--muted);font-weight:700;font-size:12px;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:#fff9f5}
+.td-img{width:48px;height:38px;border-radius:9px;overflow:hidden;background:#f1f3f6;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;position:relative}
+.td-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.badge{padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:800;background:#f1f3f6;color:var(--ink2)}
+.badge.ok{background:#dcfce7;color:#166534}.badge.warn{background:#fef3c7;color:#92400e}.badge.bad{background:#fee2e2;color:#991b1b}
+.badge.pill{background:var(--accent-soft);color:var(--accent-d)}
+select.status{background:#f7f8fa;color:var(--ink);border:1px solid var(--line2);border-radius:8px;padding:6px 9px;font-size:12px;cursor:pointer}
+select.status:focus{border-color:var(--accent)}
+.empty-row{text-align:center;color:var(--muted);padding:34px}
+
+#toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:900;display:flex;flex-direction:column;gap:8px;align-items:center;width:max-content;max-width:90vw}
+.toast{background:#14181f;color:#fff;padding:12px 22px;border-radius:999px;font-size:13.5px;font-weight:700;box-shadow:0 12px 34px rgba(0,0,0,.25)}
+.toast.ok{background:var(--ok)}.toast.err{background:var(--red)}
+.hidden{display:none!important}
+.loading-bar{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold),var(--accent));z-index:999;animation:load 1.2s linear infinite;display:none}
+.loading-bar.show{display:block}
+@keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+</style></head><body>
+
+<div class="loading-bar" id="loadingBar"></div>
+
+<div class="login" id="login">
+  <form class="box" id="loginForm">
+    <h1>AUTO <span>ELITE</span></h1>
+    <p>سجّل الدخول للوصول إلى لوحة التحكم</p>
+    <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="username" autofocus>
+    <input id="pw" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+    <button type="submit">دخول</button>
+    <div class="err" id="loginErr"></div>
+    <a href="index.html" class="back-link">← العودة إلى المتجر</a>
+  </form>
+</div>
+
+<div id="app" class="hidden">
+  <div class="topbar">
+    <div class="brand">AUTO <span>ELITE</span> · Admin</div>
+    <div class="r">
+      <a class="btn ghost sm" href="index.html">🏪 المتجر</a>
+      <button class="btn ghost sm" onclick="exportCSV('cars')">📥 السيارات</button>
+      <button class="btn ghost sm" onclick="exportCSV('bookings')">📥 الحجوزات</button>
+      <button class="btn danger sm" onclick="logout()">خروج</button>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="stats" id="stats"></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="cars">🚗 السيارات</button>
+      <button class="tab-btn" data-tab="bookings">🧾 الحجوزات</button>
+      <button class="tab-btn" data-tab="settings">⚙️ الإعدادات</button>
+    </div>
+
+    <section class="tab active" id="tab-cars">
+      <form class="pform" id="cForm">
+        <div class="fh" id="formTitle">➕ إضافة سيارة جديدة</div>
+        <div class="frow">
+          <input id="cName" placeholder="اسم السيارة *" required>
+          <input id="cBrand" placeholder="الماركة *" required list="brandList"><datalist id="brandList"></datalist>
+          <input id="cModel" placeholder="الموديل">
+          <input id="cYear" type="number" min="1990" max="2026" placeholder="سنة الصنع *" required>
+          <input id="cPrice" type="number" step="1000" min="0" placeholder="السعر *" required>
+          <input id="cOld" type="number" step="1000" min="0" placeholder="السعر قبل الخصم">
+          <input id="cMileage" type="number" min="0" placeholder="المسافة (كم)" value="0">
+          <select id="cFuel"><option>بنزين</option><option>ديزل</option><option>كهرباء</option><option>هجين</option></select>
+          <select id="cTrans"><option>أوتوماتيك</option><option>يدوي</option></select>
+          <input id="cColor" placeholder="اللون">
+          <select id="cCond"><option value="new">جديد</option><option value="used">مستعمل</option></select>
+          <select id="cStatus"><option value="available">متاح</option><option value="reserved">محجوز</option><option value="sold">مباع</option></select>
+          <input id="cRate" type="number" step="0.1" min="0" max="5" placeholder="التقييم" value="4.5">
+          <input id="cEmoji" placeholder="إيموجي" value="🚗" maxlength="4">
+        </div>
+        <div class="frow" style="margin-top:10px">
+          <textarea id="cDesc" placeholder="وصف قصير للسيارة" rows="2" style="grid-column:1/-1"></textarea>
+          <input id="cFeatures" placeholder="المزايا (مفصولة بفاصلة): مقاعد جلد, شاشة..." style="grid-column:1/-1">
+        </div>
+
+        <div class="media-box">
+          <div class="label">🖼️ معرض الصور (اختياري)</div>
+          <div class="frow">
+            <input id="cImgFile" type="file" accept="image/*" multiple>
+            <input id="cImg" placeholder="أو رابط صورة خارجي (اختياري)">
+          </div>
+          <div class="media-preview" id="imgPreview"></div>
+        </div>
+
+        <div class="media-box">
+          <div class="label">🎬 فيديو السيارة (اختياري)</div>
+          <div class="frow">
+            <input id="cVideoFile" type="file" accept="video/mp4,video/webm">
+            <input id="cVideo" placeholder="أو رابط فيديو خارجي (اختياري)">
+          </div>
+          <div class="media-preview" id="videoPreview"></div>
+        </div>
+
+        <label class="chk"><input type="checkbox" id="cFeat"> سيارة مميزة ⭐</label>
+
+        <div class="factions">
+          <button type="button" class="btn ghost" onclick="cancelEdit()">إلغاء</button>
+          <button type="submit" class="btn" id="saveBtn">حفظ السيارة</button>
+        </div>
+      </form>
+
+      <div class="tablewrap">
+        <div class="thead"><h3>🚗 قائمة السيارات</h3><input id="cSearch" placeholder="بحث..."></div>
+        <div style="overflow:auto"><table><thead><tr><th>#</th><th>السيارة</th><th>الماركة</th><th>السنة</th><th>السعر</th><th>وسائط</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody id="cBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-bookings">
+      <div class="tablewrap">
+        <div class="thead"><h3>🧾 حجوزات القيادة</h3><input id="bSearch" placeholder="بحث بالاسم أو الهاتف..."></div>
+        <div style="overflow:auto"><table><thead><tr><th>#</th><th>العميل</th><th>الهاتف</th><th>السيارة</th><th>التاريخ المفضل</th><th>الحالة</th><th>الوقت</th><th></th></tr></thead><tbody id="bBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-settings">
+      <form class="pform" id="sForm" style="max-width:640px">
+        <div class="fh">⚙️ إعدادات المعرض</div>
+        <div class="frow">
+          <input id="sName" placeholder="اسم المعرض">
+          <input id="sCurrency" placeholder="العملة">
+          <input id="sWhatsapp" placeholder="رقم واتساب">
+          <input id="sPhone" placeholder="رقم الهاتف">
+          <input id="sAddress" placeholder="العنوان">
+        </div>
+        <div class="factions"><button class="btn" type="submit">حفظ الإعدادات</button></div>
+        <p style="color:var(--muted);font-size:12.5px;margin-top:16px;">
+          💡 الاتصال: <span id="connStatus">جاري التحقق...</span>
+        </p>
+      </form>
+    </section>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://mrmnsizoqphzskudgazn.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_V5iwg9qzUdMWshwBG5PcGQ_N6jtj7ce';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let CARS = [], BOOKINGS = [], SETTINGS = {}, EDIT_ID = null;
+let PENDING_IMAGES = [], EXISTING_IMAGES = [], PENDING_VIDEO = null;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&:quot;',"'":' c&#39;'}[c]));
+const. money = n => Number(n || 0).oldtoLocaleString('en_price-US') + ' ' + (SETTINGS.currency || || 'أوقية');
+
+function toast(m, t) {
+  const e = document.createElement('div');
+  e.className = 'toast ' + (t || '');
+  e.textContent = m;
+  $('toasts').appendChild(e);
+  setTimeout(() => { e.style.opacity = 0; e.style.transition = '.3s'; setTimeout(() => e.remove(), 300); }, 2500);
+}
+function setLoading(on) { $('loadingBar').classList.toggle('show', on); }
+
+async function uploadFile(file) {
+  const ext = (file.name.split('.').pop() || 'bin').toLowerCase();
+  const path = `cars/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await sb.storage.from('car-media').upload(path, file, { cacheControl: '3600', upsert: false });
+  if (error) throw new Error('رفع فاشل: ' + error.message);
+  const { data } = sb.storage.from('car-media').getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function fetchCars() {
+  const { data, error } = await sb.from('cars').select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data || []).map(c => ({
+    ...c, oldPrice 0, images: c.images || [], features: c.features || [], video_url: c.video_url || '', desc: c.description || ''
+  }));
+}
+async function fetchBookings() {
+  const { data, error } = await sb.from('bookings').select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+async function fetchSettings() {
+  const { data, error } = await sb.from('settings').select('*').eq('id', 1).single();
+  if (error || !data) return { storeName: 'AUTO ELITE', currency: 'أوقية', whatsapp: '', phone: '', address: '' };
+  return { storeName: data.store_name || 'AUTO ELITE', currency: data.currency || 'أوقية', whatsapp: data.whatsapp || '', phone: data.phone || '', address: data.address || '' };
+}
+
+$('loginForm').onsubmit = async e => {
+  e.preventDefault(); $('loginErr').textContent = '';
+  const btn = $('loginForm').querySelector('button'); btn.disabled = true; btn.textContent = 'جارٍ الدخول...';
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('pw').value });
+    if (error) throw error;
+    $('login').style.display = 'none'; showApp();
+  } catch (err) {
+    $('loginErr').textContent = err.message === 'Invalid login credentials' ? 'البريد أو كلمة المرور غير صحيحة' : err.message;
+  } finally { btn.disabled = false; btn.textContent = 'دخول'; }
+};
+
+async function logout() { await sb.auth.signOut(); location.reload(); }
+
+async function boot() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) showApp(); else $('login').style.display = 'flex';
+}
+sb.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') location.reload(); });
+
+async function showApp() {
+  $('app').classList.remove('hidden'); setLoading(true);
+  try {
+    await loadAll();
+    $('connStatus').innerHTML = '<b style="color:var(--ok)">✅ متصل بـ Supabase (محمي)</b>';
+  } catch (e) {
+    $('connStatus').innerHTML = '<b style="color:var(--red)">❌ ' + esc(e.message) + '</b>';
+    toast('فشل الاتصال: ' + e.message, 'err');
+  } finally { setLoading(false); }
+}
+
+async function loadAll() {
+  SETTINGS = await fetchSettings();
+  [CARS, BOOKINGS] = await Promise.all([fetchCars(), fetchBookings()]);
+  renderStats(); renderCars(); renderBookings(); renderBrandList(); fillSettings();
+}
+
+function renderStats() {
+  const available = CARS.filter(c => c.status === 'available').length;
+  const reserved = CARS.filter(c => c.status === 'reserved').length;
+  const totalValue = CARS.filter(c => c.status === 'available').reduce((s, c) => s + (+c.price || 0), 0);
+  const newBookings = BOOKINGS.filter(b => b.status === 'جديد').length;
+  $('stats').innerHTML = `
+    <div class="stat"><div class="l">إجمالي السيارات</div><b>${CARS.length}</b></div>
+    <div class="stat ok"><div class="l">متاحة للبيع</div><b>${available}</b></div>
+    <div class="stat warn"><div class="l">محجوزة</div><b>${reserved}</b></div>
+    <div class="stat info"><div class="l">حجوزات جديدة</div><b>${newBookings}</b></div>
+    <div class="stat"><div class="l">قيمة المخزون</div><b style="font-size:16px">${money(totalValue)}</b></div>`;
+}
+
+function renderBrandList() {
+  const brands = [...new Set(CARS.map(c => c.brand).filter(Boolean))];
+  $('brandList').innerHTML = brands.map(b => `<option value="${esc(b)}">`).join('');
+}
+
+function renderCars() {
+  const q = ($('cSearch').value || '').toLowerCase();
+  const list = CARS.filter(c => !q || ((c.name||'')+' '+(c.brand||'')+' '+(c.model||'')).toLowerCase().includes(q));
+  const statusMap = { available: ['ok','متاح'], reserved: ['warn','محجوز'], sold: ['bad','مباع'] };
+  $('cBody').innerHTML = list.length ? list.map(c => {
+    const [cls, txt] = statusMap[c.status] || ['','-'];
+    const imgCount = (c.images || []).length, hasVideo = !!c.video_url;
+    return `<tr>
+      <td>${c.id}</td>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div class="td-img">${c.emoji||'🚗'}${imgCount>0?`<img src="${esc(c.images[0])}" onerror="this.remove()">`:''}</div>
+        <div><b style="display:block;font-size:13px">${esc(c.name)}</b><span style="font-size:11px;color:var(--muted)">${esc(c.model||'')}</span></div>
+      </div></td>
+      <td>${esc(c.brand||'-')}</td><td>${c.year||'-'}</td><td><b style="color:var(--accent)">${money(c.price)}</b></td>
+      <td style="white-space:nowrap">${imgCount?`<span class="badge pill">📷 ${imgCount}</span>`:''} ${hasVideo?`<span class="badge pill">🎬</span>`:''}</td>
+      <td><span class="badge ${cls}">${txt}</span></td>
+      <td style="white-space:nowrap"><button class="btn ghost sm" onclick="editCar(${c.id})">تعديل</button><button class="btn danger sm" onclick="delCar(${c.id})">حذف</button></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="8" class="empty-row">لا توجد سيارات</td></tr>`;
+}
+
+// Media Handlers
+$('cImgFile').onchange = e => {
+  [...e.target.files].forEach(f => {
+    if (f.size > 8 * 1024 * 1024) return toast('صورة كبيرة: ' + f.name, 'err');
+    const r = new FileReader(); r.onload = () => { PENDING_IMAGES.push({ file: f, dataUrl: r.result }); renderImagePreview(); }; r.readAsDataURL(f);
+  }); e.target.value = '';
+};
+$('cVideoFile').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (f.size > 50 * 1024 * 1024) return toast('الفيديو كبير (الحد 50MB)', 'err');
+  const r = new FileReader(); r.onload = () => { PENDING_VIDEO = { file: f, dataUrl: r.result }; renderVideoPreview(); }; r.readAsDataURL(f); e.target.value = '';
+};
+
+function renderImagePreview() {
+  const ex = EXISTING_IMAGES.map((url, i) => `<div class="media-item existing"><img src="${esc(url)}"><button type="button" class="rm" onclick="removeExistingImage(${i})">✕</button></div>`).join('');
+  const pd = PENDING_IMAGES.map((p, i) => `<div class="media-item"><img src="${p.dataUrl}"><button type="button" class="rm" onclick="removePendingImage(${i})">✕</button></div>`).join('');
+  const mn = $('cImg').value.trim() ? `<div class="media-item existing"><img src="${esc($('cImg').value.trim())}" onerror="this.style.opacity=.3"></div>` : '';
+  $('imgPreview').innerHTML = ex + pd + mn;
+}
+function renderVideoPreview() {
+  $('videoPreview').innerHTML = !PENDING_VIDEO ? '' : `<div class="media-item" style="width:110px;height:70px"><video src="${PENDING_VIDEO.dataUrl}" muted></video><button type="button" class="rm" onclick="PENDING_VIDEO=null;renderVideoPreview()">✕</button></div>`;
+}
+window.removeExistingImage = i => { EXISTING_IMAGES.splice(i,1); renderImagePreview(); };
+window.removePendingImage = i => { PENDING_IMAGES.splice(i,1); renderImagePreview(); };
+$('cImg').oninput = renderImagePreview;
+
+$('cForm').onsubmit = async e => {
+  e.preventDefault();
+  const btn = $('saveBtn'); btn.disabled = true; const orig = btn.textContent;
+  try {
+    btn.textContent = 'جارٍ رفع الصور...';
+    const uploaded = [];
+    for (const p of PENDING_IMAGES) uploaded.push(await uploadFile(p.file));
+    
+    btn.textContent = 'جارٍ رفع الفيديو...';
+    let videoUrl = $('cVideo').value.trim();
+    if (PENDING_VIDEO) videoUrl = await uploadFile(PENDING_VIDEO.file);
+
+    const manualImg = $('cImg').value.trim();
+    let allImages = [...EXISTING_IMAGES, ...uploaded, ...(manualImg ? [manualImg] : [])];
+    allImages = [...new Set(allImages)];
+
+    btn.textContent = 'جارٍ الحفظ...';
+    const carData = {
+      name: $('cName').value.trim(), brand: $('cBrand').value.trim(), model: $('cModel').value.trim() || null,
+      year: +$('cYear').value, price: +$('cPrice').value, old_price: +$('cOld').value || 0,
+      mileage: +$('cMileage').value || 0, fuel: $('cFuel').value, transmission: $('cTrans').value,
+      color: $('cColor').value.trim() || null, condition: $('cCond').value, status: $('cStatus').value,
+      rate: +$('cRate').value || 4.5, emoji: $('cEmoji').value.trim() || '🚗', description: $('cDesc').value.trim() || null,
+      features: $('cFeatures').value.split(',').map(s => s.trim()).filter(Boolean),
+      featured: $('cFeat').checked, images: allImages.length ? allImages : null, video_url: videoUrl || null
+    };
+
+    if (EDIT_ID) { const { error } = await sb.from('cars').update(carData).eq('id', EDIT_ID); if (error) throw error; }
+    else { const { error } = await sb.from('cars').insert([carData]); if (error) throw error; }
+
+    toast(EDIT_ID ? 'تم التحديث ✓' : 'تمت الإضافة ✓', 'ok');
+    cancelEdit(); await loadAll();
+  } catch (err) { toast('فشل: ' + err.message, 'err'); }
+  finally { btn.disabled = false; btn.textContent = orig; }
+};
+
+function editCar(id) {
+  const c = CARS.find(x => x.id == id); if (!c) return;
+  EDIT_ID = id;
+  $('cName').value = c.name || ''; $('cBrand').value = c.brand || ''; $('cModel').value = c.model || '';
+  $('cYear').value = c.year || ''; $('cPrice').value = c.price ?? ''; $('cOld').value = c.old_price || '';
+  $('cMileage').value = c.mileage ?? 0; $('cFuel').value = c.fuel || 'بنزين'; $('cTrans').value = c.transmission || 'أوتوماتيك';
+  $('cColor').value = c.color || ''; $('cCond').value = c.condition || 'new'; $('cStatus').value = c.status || 'available';
+  $('cRate').value = c.rate ?? 4.5; $('cEmoji').value = c.emoji || '🚗'; $('cDesc').value = c.description || c.desc || '';
+  $('cFeatures').value = (c.features || []).join(', '); $('cFeat').checked = !!c.featured;
+  $('cImg').value = ''; $('cVideo').value = c.video_url || '';
+  EXISTING_IMAGES = Array.isArray(c.images) ? [...c.images] : []; PENDING_IMAGES = []; PENDING_VIDEO = null;
+  renderImagePreview(); renderVideoPreview();
+  $('formTitle').textContent = '✏️ تعديل السيارة'; $('saveBtn').textContent = 'تحديث';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelEdit() {
+  EDIT_ID = null; $('cForm').reset(); $('cEmoji').value = '🚗'; $('cMileage').value = 0; $('cRate').value = 4.5;
+  EXISTING_IMAGES = []; PENDING_IMAGES = []; PENDING_VIDEO = null; renderImagePreview(); renderVideoPreview();
+  $('formTitle').textContent = '➕ إضافة سيارة جديدة'; $('saveBtn').textContent = 'حفظ السيارة';
+}
+
+async function delCar(id) {
+  if (!confirm('حذف السيارة نهائياً؟')) return;
+  try { const { error } = await sb.from('cars').delete().eq('id', id); if (error) throw error; toast('تم الحذف', 'ok'); await loadAll(); }
+  catch (e) { toast('فشل: ' + e.message, 'err'); }
+}
+
+const BOOKING_STATUSES = ['جديد','تم التواصل','مؤكد','ملغي'];
+function renderBookings() {
+  const q = ($('bSearch').value || '').toLowerCase();
+  const list = BOOKINGS.filter(b => !q || ((b.customer||'')+' '+(b.phone||'')).toLowerCase().includes(q));
+  $('bBody').innerHTML = list.length ? list.map(b => `
+    <tr>
+      <td>#${String(b.id).slice(-5)}</td><td>${esc(b.customer)}</td><td dir="ltr" style="text-align:right">${esc(b.phone)}</td>
+      <td style="font-size:12px">${esc(b.car_name||'-')}</td><td style="font-size:12px;color:var(--muted)">${esc(b.pref_date||'-')}</td>
+      <td><select class="status" onchange="setBookingStatus(${b.id},this.value)">${BOOKING_STATUSES.map(s=>`<option ${s===b.status?'selected':''}>${s}</option>`).join('')}</select></td>
+      <td style="font-size:11.5px;color:var(--muted)">${b.created_at?new Date(b.created_at).toLocaleString('ar-EG'):''}</td>
+      <td><button class="btn danger sm" onclick="delBooking(${b.id})">✕</button></td>
+    </tr>`).join('') : `<tr><td colspan="8" class="empty-row">لا توجد حجوزات</td></tr>`;
+}
+async function setBookingStatus(id, status) {
+  try { const { error } = await sb.from('bookings').update({ status }).eq('id', id); if (error) throw error;
+    const i = BOOKINGS.findIndex(x => x.id == id); if (i > -1) BOOKINGS[i].status = status; renderStats(); toast('تم ✓', 'ok');
+  } catch (e) { toast('فشل: ' + e.message, 'err'); }
+}
+async function delBooking(id) {
+  if (!confirm('حذف الحجز؟')) return;
+  try { const { error } = await sb.from('bookings').delete().eq('id', id); if (error) throw error; toast('تم', 'ok'); await loadAll(); }
+  catch (e) { toast('فشل: ' + e.message, 'err'); }
+}
+
+function fillSettings() {
+  $('sName').value = SETTINGS.storeName || ''; $('sCurrency').value = SETTINGS.currency || '';
+  $('sWhatsapp').value = SETTINGS.whatsapp || ''; $('sPhone').value = SETTINGS.phone || ''; $('sAddress').value = SETTINGS.address || '';
+}
+$('sForm').onsubmit = async e => {
+  e.preventDefault();
+  try {
+    const { error } = await sb.from('settings').update({
+      store_name: $('sName').value.trim() || 'AUTO ELITE', currency: $('sCurrency').value.trim() || 'أوقية',
+      whatsapp: $('sWhatsapp').value.trim(), phone: $('sPhone').value.trim(), address: $('sAddress').value.trim()
+    }).eq('id', 1);
+    if (error) throw error;
+    SETTINGS = await fetchSettings(); toast('تم الحفظ ✓', 'ok'); renderStats();
+  } catch (e) { toast('فشل: ' + e.message, 'err'); }
+};
+
+document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  b.classList.add('active'); $('tab-' + b.dataset.tab).classList.add('active');
+});
+$('cSearch').oninput = renderCars; $('bSearch').oninput = renderBookings;
+
+function exportCSV(type) {
+  let csv = '';
+  if (type === 'cars') {
+    csv = 'الاسم,الماركة,الموديل,السنة,السعر,المسافة,الوقود,الحالة البيعية\n';
+    CARS.forEach(c => csv += `"${c.name}","${c.brand}","${c.model||''}",${c.year},${c.price},${c.mileage},"${c.fuel}","${c.status}"\n`);
+  } else {
+    csv = 'رقم,العميل,الهاتف,السيارة,التاريخ المفضل,الحالة\n';
+    BOOKINGS.forEach(b => csv += `"${b.id}","${b.customer}","${b.phone}","${b.car_name||''}","${b.pref_date||''}","${b.status}"\n`);
+  }
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `autoelite_${type}_${Date.now()}.csv`; a.click();
+  toast('تم التصدير ✓', 'ok');
+}
+
+boot();
+</script>
+</body></html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AUTO ELITE — معرض السيارات</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f8fa;--white:#fff;--line:#eceef2;--line2:#e2e5eb;--ink:#14181f;--ink2:#3a4150;--muted:#848c9c;--accent:#ff6a1a;--accent-soft:#fff1e8;--accent-d:#e5540a;--gold:#f5b942;--ok:#16a34a;--red:#ef4444;--shadow:0 4px 18px rgba(20,24,31,.06);--shadow-lg:0 16px 44px rgba(20,24,31,.12)}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Tajawal,sans-serif}
+body{background:var(--bg);color:var(--ink);padding-bottom:40px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;outline:none;border:none}
+button{cursor:pointer}a{text-decoration:none;color:inherit}
+
+header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.h{max-width:1320px;margin:auto;display:flex;gap:12px;align-items:center;padding:14px 18px}
+.logo{font-weight:900;font-size:22px;letter-spacing:.3px;white-space:nowrap}
+.logo span{color:var(--accent)}
+.search{flex:1;position:relative;min-width:0}
+.search input{width:100%;padding:12px 18px;border-radius:12px;border:1px solid var(--line2);background:#f1f3f6;color:var(--ink);font-size:14px;cursor:text;transition:.2s}
+.search input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.actions{display:flex;gap:8px;align-items:center}
+.ico{display:inline-flex;align-items:center;gap:6px;padding:11px 14px;border-radius:12px;border:1px solid var(--line2);background:#fff;color:var(--ink);font-size:14px;font-weight:700;transition:.2s}
+.ico:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.ico b{background:var(--accent);color:#fff;border-radius:999px;padding:1px 7px;font-size:12px;min-width:20px;text-align:center}
+.mob{display:inline-flex}@media(min-width:1080px){.mob{display:none}}
+
+.wrap{max-width:1320px;margin:0 auto;padding:22px 18px 60px;display:grid;grid-template-columns:1fr;gap:22px}
+@media(min-width:1080px){.wrap{grid-template-columns:270px 1fr}}
+
+.hero{position:relative;border-radius:22px;overflow:hidden;margin-bottom:22px;background:linear-gradient(120deg,#fff 0%,#fff7f2 60%,#ffefe3 100%);border:1px solid var(--line);box-shadow:var(--shadow)}
+.hero::after{content:"🏎️";position:absolute;left:-20px;bottom:-40px;font-size:190px;opacity:.07;transform:rotate(-10deg)}
+.hero-inner{padding:42px 32px;position:relative;z-index:2;max-width:640px}
+.hero .tag{display:inline-block;background:var(--accent);color:#fff;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:800;margin-bottom:14px}
+.hero h1{font-size:clamp(26px,4vw,42px);font-weight:900;line-height:1.35;color:var(--ink)}
+.hero h1 em{font-style:normal;color:var(--accent);position:relative}
+.hero h1 em::after{content:"";position:absolute;bottom:2px;left:0;right:0;height:8px;background:var(--accent-soft);z-index:-1;border-radius:3px}
+.hero p{color:var(--ink2);margin-top:12px;font-size:15px;line-height:1.8;max-width:500px}
+.chips{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.chip{background:#fff;border:1px solid var(--line2);padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:var(--shadow)}
+.chip b{color:var(--accent);font-size:17px;margin-left:5px}
+
+.filters{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:22px;height:fit-content;box-shadow:var(--shadow)}
+@media(min-width:1080px){.filters{position:sticky;top:88px}}
+@media(max-width:1079px){.filters{position:fixed;top:0;right:0;bottom:0;width:90%;max-width:360px;z-index:210;border-radius:0;overflow:auto;transform:translateX(110%);transition:transform .3s;box-shadow:-20px 0 50px rgba(0,0,0,.2)}.filters.open{transform:none}}
+.fhead{display:flex;justify-content:space-between;align-items:center;font-size:16px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.fblock{padding:14px 0;border-top:1px solid var(--line)}.fblock:first-of-type{border:none;padding-top:0}
+.flabel{display:block;font-size:13px;font-weight:800;margin-bottom:10px;color:var(--ink)}
+.flabel span{color:var(--accent);font-weight:900}
+input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;height:5px}
+.rd{display:flex;align-items:center;gap:9px;font-size:13.5px;padding:6px 0;cursor:pointer;color:var(--ink2);transition:.15s}
+.rd:hover{color:var(--accent)}
+.rd input{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}
+.yearrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.yearrow input{width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--line2);background:#fff;color:var(--ink);font-size:13px;cursor:text}
+.yearrow input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.reset{width:100%;margin-top:16px;padding:12px;border-radius:11px;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:13px;border:1px solid transparent;transition:.2s}
+.reset:hover{background:var(--accent);color:#fff}
+.x{background:transparent;font-size:18px;color:var(--muted);padding:4px 8px;border-radius:8px}
+
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.count{font-size:14px;color:var(--muted)}.count b{color:var(--ink);font-size:17px;font-weight:900}
+#sort{padding:11px 16px;border-radius:11px;border:1px solid var(--line2);background:#fff;color:var(--ink);font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+#sort:focus{border-color:var(--accent)}
+
+/* 2 Columns Grid */
+.grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+@media(min-width:1400px){.grid{grid-template-columns:repeat(3,1fr);gap:18px}}
+
+.card{background:var(--white);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:.28s;cursor:pointer;position:relative;box-shadow:var(--shadow)}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--accent)}
+.thumb{aspect-ratio:16/11;background:#f1f3f6;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.thumb .emoji{font-size:60px;position:absolute;opacity:.3}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.55s;z-index:1}
+.card:hover .thumb img{transform:scale(1.08)}
+.badge{position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:999px;z-index:3;backdrop-filter:blur(6px)}
+.badge.new{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+.badge.used{background:rgba(255,255,255,.92);color:var(--ink2);border:1.5px solid var(--line2)}
+.fav{position:absolute;top:10px;left:10px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.94);border:1px solid var(--line2);font-size:15px;display:flex;align-items:center;justify-content:center;z-index:3;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.fav:hover{transform:scale(1.1);border-color:var(--accent)}
+.fav.on{background:var(--accent-soft);border-color:var(--accent)}
+.status{position:absolute;bottom:10px;right:10px;font-size:11px;font-weight:800;padding:4px 11px;border-radius:999px;z-index:3}
+.status.sold{background:var(--red);color:#fff}
+.status.res{background:var(--gold);color:#14181f}
+.off{position:absolute;bottom:10px;left:10px;font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--accent);color:#fff;z-index:3}
+.img-count{position:absolute;bottom:10px;left:10px;z-index:3;background:rgba(0,0,0,.65);color:#fff;font-size:10.5px;padding:3px 8px;border-radius:999px;font-weight:700}
+
+.cbody{padding:12px 14px 14px;display:flex;flex-direction:column;flex:1}
+.cbrand{font-size:10.5px;color:var(--accent);font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+.cname{font-size:14px;font-weight:800;line-height:1.35;margin-top:3px;color:var(--ink)}
+.cmeta{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.spec{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;color:var(--ink2);background:#f5f6f8;padding:4px 8px;border-radius:6px;font-weight:600}
+.cprice{margin-top:auto;padding-top:12px}
+.price{font-size:17px;font-weight:900;color:var(--accent);display:flex;align-items:baseline;gap:6px}
+.price s{font-size:11px;color:#b0b6c2;font-weight:500}
+.cactions{margin-top:10px}
+.btn-book{width:100%;background:var(--accent);color:#fff;font-weight:800;font-size:12.5px;padding:10px;border-radius:9px;transition:.2s}
+.btn-book:hover:not(:disabled){background:var(--accent-d);transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,106,26,.35)}
+.btn-book:disabled{background:#f1f3f6;color:#a8b0bf;cursor:not-allowed}
+.empty{text-align:center;padding:70px 20px;color:var(--muted);grid-column:1/-1;background:#fff;border-radius:18px;border:1px dashed var(--line2)}
+.empty div{font-size:56px;margin-bottom:12px;opacity:.4}
+.empty p{font-size:15px;font-weight:700}
+
+.scrim{position:fixed;inset:0;background:rgba(20,24,31,.4);z-index:200;display:none;backdrop-filter:blur(3px)}.scrim.show{display:block}
+.drawer{position:fixed;inset:0;z-index:230;display:none}.drawer.open{display:block}
+.ov{position:absolute;inset:0;background:rgba(20,24,31,.5);backdrop-filter:blur(3px)}
+.pnl{position:absolute;top:0;bottom:0;left:0;background:#fff;width:96%;max-width:520px;display:flex;flex-direction:column;box-shadow:20px 0 60px rgba(0,0,0,.25)}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line);font-size:16px;flex-shrink:0;font-weight:800}
+.dbody{flex:1;overflow:auto}
+
+.dimg{position:relative;aspect-ratio:16/10;background:#f1f3f6;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.dimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.demoji{position:absolute;font-size:70px;opacity:.3}
+.dfav{position:absolute;top:16px;left:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.94);border:1px solid var(--line2);font-size:19px;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.dfav.on{background:var(--accent-soft);border-color:var(--accent)}
+
+.thumbs{position:absolute;bottom:10px;right:10px;left:10px;display:flex;gap:6px;overflow-x:auto;z-index:3;padding:4px}
+.thumbs img{width:46px;height:36px;object-fit:cover;border-radius:6px;border:2px solid transparent;cursor:pointer;flex-shrink:0;position:relative;inset:auto;width:50px;height:40px}
+.thumbs img.active{border-color:var(--accent)}
+
+.dcontent{padding:20px}
+.dcontent .cbrand{font-size:12.5px}
+.dcontent h2{font-size:22px;font-weight:900;margin:6px 0 12px}
+.dprice{font-size:26px;font-weight:900;color:var(--accent);display:flex;align-items:baseline;gap:9px}
+.dprice s{font-size:14px;color:#b0b6c2;font-weight:500}
+
+.video-wrap{margin:16px 0;border-radius:14px;overflow:hidden;background:#000;box-shadow:var(--shadow)}
+.video-wrap video{width:100%;max-height:300px;display:block}
+
+.specgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}
+.specgrid>div{background:#f7f8fa;border:1px solid var(--line);border-radius:12px;padding:11px}
+.specgrid span{display:block;font-size:10.5px;color:var(--muted);margin-bottom:3px;font-weight:600}
+.specgrid b{font-size:13.5px;color:var(--ink)}
+.ddesc{font-size:13.5px;color:var(--ink2);line-height:1.9;margin:14px 0}
+.feats{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}
+.feat{font-size:12px;background:var(--accent-soft);color:var(--accent-d);border:1px solid #ffd9c0;padding:5px 12px;border-radius:8px;font-weight:600}
+
+.bookbox{margin-top:20px;border-top:1px solid var(--line);padding-top:20px}
+.bookbox h3{font-size:16px;margin-bottom:14px;color:var(--ink)}
+.bform input,.bform textarea{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:11px;background:#fff;color:var(--ink);margin-bottom:10px;font-size:14px;cursor:text}
+.bform input:focus,.bform textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.pay{width:100%;padding:14px;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;font-size:14.5px;display:block;text-align:center;margin-top:6px}
+.pay:hover{background:var(--accent-d)}
+.pay.wa{background:#25D366;color:#fff;margin-top:10px}
+.pay.ghost{background:#f5f6f8;color:var(--ink);border:1px solid var(--line2);margin-top:10px}
+.bsuccess{text-align:center;padding:10px 0}
+.okicon{width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;font-size:30px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.bsuccess h3{font-size:18px;margin-bottom:8px;color:var(--ink)}
+.bsuccess p{font-size:13.5px;color:var(--muted);margin-bottom:5px}
+
+.fitem{display:flex;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);align-items:center;cursor:pointer;transition:.15s}
+.fitem:hover{background:var(--accent-soft)}
+.fthumb{width:68px;height:54px;border-radius:10px;background:#f1f3f6;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;position:relative}
+.fthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.finfo{flex:1;min-width:0}
+.finfo b{font-size:13.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.finfo span{font-size:12.5px;color:var(--accent);font-weight:800}
+.fdel{color:#c4cad4;font-size:16px;padding:6px;background:transparent}
+.fdel:hover{color:var(--red)}
+.cempty{text-align:center;padding:60px 20px;color:var(--muted)}
+.cempty div{font-size:52px;margin-bottom:12px;opacity:.4}
+
+#toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;gap:8px;align-items:center;width:max-content;max-width:90vw}
+.toast{background:#14181f;color:#fff;padding:12px 22px;border-radius:999px;font-size:13.5px;font-weight:700;box-shadow:0 12px 34px rgba(0,0,0,.25)}
+.toast.ok{background:var(--ok)}.toast.err{background:var(--red)}
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:30px 16px;border-top:1px solid var(--line);margin-top:30px;background:#fff}
+footer b{color:var(--accent)}
+</style></head><body>
+
+<header><div class="h">
+  <a class="logo" href="index.html">AUTO <span>ELITE</span></a>
+  <div class="search"><input id="q" type="search" placeholder="ابحث عن سيارة، ماركة، موديل..." autocomplete="off"></div>
+  <div class="actions">
+    <button class="ico mob" id="btnFilter" title="تصفية">☰</button>
+    <button class="ico" id="btnFav" title="المفضلة">❤️ <b id="favCount">0</b></button>
+    <a class="ico" href="admin.html" title="لوحة التحكم">⚙️</a>
+  </div>
+</div></header>
+
+<div class="scrim" id="scrim" onclick="closeAll()"></div>
+
+<div class="wrap">
+  <aside class="filters" id="filters">
+    <div class="fhead"><b>تصفية السيارات</b><button class="x mob" onclick="closeAll()">✕</button></div>
+    <div class="fblock"><label class="flabel">الماركة</label><div id="brandBox"></div></div>
+    <div class="fblock"><label class="flabel">السعر حتى <span id="pv">—</span></label><input type="range" id="pr" min="0" max="6000000" step="50000" value="6000000"></div>
+    <div class="fblock"><label class="flabel">سنة الصنع</label>
+      <div class="yearrow"><input type="number" id="yFrom" placeholder="من" min="1990" max="2026"><input type="number" id="yTo" placeholder="إلى" min="1990" max="2026"></div>
+    </div>
+    <div class="fblock"><label class="flabel">نوع الوقود</label><div id="fuelBox"></div></div>
+    <div class="fblock"><label class="flabel">ناقل الحركة</label>
+      <label class="rd"><input type="radio" name="tr" value="" checked> الكل</label>
+      <label class="rd"><input type="radio" name="tr" value="أوتوماتيك"> أوتوماتيك</label>
+      <label class="rd"><input type="radio" name="tr" value="يدوي"> يدوي</label>
+    </div>
+    <div class="fblock"><label class="flabel">الحالة</label>
+      <label class="rd"><input type="radio" name="cd" value="" checked> الكل</label>
+      <label class="rd"><input type="radio" name="cd" value="new"> جديد</label>
+      <label class="rd"><input type="radio" name="cd" value="used"> مستعمل</label>
+    </div>
+    <div class="fblock"><label class="rd"><input type="checkbox" id="featOnly"> المميزة فقط</label></div>
+    <button class="reset" onclick="resetFilters()">إعادة ضبط</button>
+  </aside>
+
+  <main>
+    <section class="hero"><div class="hero-inner">
+      <span class="tag">✦ معرض معتمد</span>
+      <h1>اكتشف <em>سيارتك المثالية</em> بأسعار لا تُقاوَم</h1>
+      <p>سيارات مختارة بعناية · فحص شامل · ضمان ·  سيارات جذابه · تجربة قيادة مريحة</p>
+      <div class="chips">
+        <div class="chip"> <b id="chipCars">0</b> سيارة</div>
+        <div class="chip">🏷️ <b id="chipBrands">0</b> ماركة</div>
+        <div class="chip">✔️ ضمان الجودة</div>
+      </div>
+    </div></section>
+    <div class="toolbar">
+      <div class="count" id="count"></div>
+      <select id="sort">
+        <option value="default">الترتيب: الافتراضي</option>
+        <option value="year">الأحدث سنة</option>
+        <option value="price-asc">السعر: الأقل أولاً</option>
+        <option value="price-desc">السعر: الأعلى أولاً</option>
+        <option value="rate">الأعلى تقييماً</option>
+      </select>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+
+<footer>© <b>AUTO ELITE</b> — معرض السيارات الفاخرة · جميع الحقوق محفوظة</footer>
+
+<div class="drawer" id="detailDrawer">
+  <div class="ov" onclick="closeAll()"></div>
+  <aside class="pnl" id="detailPnl">
+    <div class="dhead"><b>تفاصيل السيارة</b><button class="x" onclick="closeAll()">✕</button></div>
+    <div class="dbody" id="detailBody"></div>
+  </aside>
+</div>
+
+<div class="drawer" id="favDrawer">
+  <div class="ov" onclick="closeAll()"></div>
+  <aside class="pnl">
+    <div class="dhead"><b>❤️ المفضلة</b><button class="x" onclick="closeAll()">✕</button></div>
+    <div class="dbody" id="favBody"></div>
+  </aside>
+</div>
+
+<div id="toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://mrmnsizoqphzskudgazn.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_V5iwg9qzUdMWshwBG5PcGQ_N6jtj7ce';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let CARS=[], SETTINGS={}, FAVS=[], CURRENT=null;
+const F={q:'',max:6000000,brands:[],fuels:[],trans:'',cond:'',featured:false,yFrom:0,yTo:9999,sort:'default'};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Number(n||0).toLocaleString('en-US')+' '+(SETTINGS.currency||'أوقية');
+const fuelIcon=f=>({'بنزين':'⛽','ديزل':'🛢️','كهرباء':'⚡','هجين':'🔋'}[f]||'⛽');
+function toast(m,t){const e=document.createElement('div');e.className='toast '+(t||'');e.textContent=m;$('toasts').appendChild(e);setTimeout(()=>{e.style.opacity=0;e.style.transition='.3s';setTimeout(()=>e.remove(),300)},2200)}
+
+async function fetchSettings() {
+  const { data, error } = await sb.from('settings').select('*').eq('id', 1).single();
+  if (error || !data) return { currency: 'أوقية', whatsapp: '', storeName: 'AUTO ELITE' };
+  return { currency: data.currency || 'أوقية', whatsapp: data.whatsapp || '', storeName: data.store_name || 'AUTO ELITE' };
+}
+
+async function fetchCars() {
+  const { data, error } = await sb.from('cars').select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data || []).map(c => ({
+    ...c, oldPrice: c.old_price || 0, images: c.images || [], features: c.features || [], video_url: c.video_url || '', desc: c.description || ''
+  }));
+}
+
+async function boot(){
+  try {
+    SETTINGS = await fetchSettings();
+    CARS = await fetchCars();
+    FAVS = JSON.parse(localStorage.getItem('autoelite_favs') || '[]');
+    
+    const maxP = Math.max(1000000, ...CARS.map(c=>+c.price||0));
+    F.max = Math.ceil(maxP/100000)*100000;
+    $('pr').max=F.max; $('pr').value=F.max; $('pv').textContent=money(F.max);
+    
+    buildFilters(); bindEvents(); renderFavs(); updateFavCount(); render();
+    
+    $('chipCars').textContent=CARS.filter(c=>c.status==='available').length;
+    $('chipBrands').textContent=new Set(CARS.map(c=>c.brand)).size;
+    document.title = SETTINGS.storeName || 'AUTO ELITE';
+  } catch (e) {
+    console.error(e); toast('تعذّر التحميل: ' + e.message, 'err');
+  }
+}
+
+function buildFilters(){
+  const brands=[...new Set(CARS.map(c=>c.brand).filter(Boolean))];
+  $('brandBox').innerHTML=brands.map(b=>`<label class="rd"><input type="checkbox" class="bf" value="${esc(b)}"> ${esc(b)}</label>`).join('');
+  $('brandBox').onchange=()=>{F.brands=[...document.querySelectorAll('.bf:checked')].map(x=>x.value);render()};
+  
+  const fuels=[...new Set(CARS.map(c=>c.fuel).filter(Boolean))];
+  $('fuelBox').innerHTML=fuels.map(f=>`<label class="rd"><input type="checkbox" class="ff" value="${esc(f)}"> ${fuelIcon(f)} ${esc(f)}</label>`).join('');
+  $('fuelBox').onchange=()=>{F.fuels=[...document.querySelectorAll('.ff:checked')].map(x=>x.value);render()};
+}
+
+function bindEvents(){
+  $('q').oninput=e=>{F.q=e.target.value;render()};
+  $('pr').oninput=e=>{F.max=+e.target.value;$('pv').textContent=money(F.max);render()};
+  $('yFrom').oninput=e=>{F.yFrom=+e.target.value||0;render()};
+  $('yTo').oninput=e=>{F.yTo=+e.target.value||9999;render()};
+  document.querySelectorAll('input[name=tr]').forEach(r=>r.onchange=()=>{F.trans=document.querySelector('input[name=tr]:checked').value;render()});
+  document.querySelectorAll('input[name=cd]').forEach(r=>r.onchange=()=>{F.cond=document.querySelector('input[name=cd]:checked').value;render()});
+  $('featOnly').onchange=e=>{F.featured=e.target.checked;render()};
+  $('sort').onchange=e=>{F.sort=e.target.value;render()};
+  $('btnFilter').onclick=()=>{$('filters').classList.add('open');$('scrim').classList.add('show')};
+  $('btnFav').onclick=()=>{renderFavs();$('favDrawer').classList.add('open')};
+}
+
+function closeAll(){$('filters').classList.remove('open');$('scrim').classList.remove('show');$('detailDrawer').classList.remove('open');$('favDrawer').classList.remove('open')}
+
+function resetFilters(){
+  F.q='';F.brands=[];F.fuels=[];F.trans='';F.cond='';F.featured=false;F.yFrom=0;F.yTo=9999;F.max=+$('pr').max;
+  $('q').value='';$('pr').value=F.max;$('pv').textContent=money(F.max);$('yFrom').value='';$('yTo').value='';
+  document.querySelectorAll('.bf,.ff').forEach(c=>c.checked=false);
+  document.querySelector('input[name=tr][value=""]').checked=true;
+  document.querySelector('input[name=cd][value=""]').checked=true;
+  $('featOnly').checked=false;render();
+}
+
+function render(){
+  const q=F.q.trim().toLowerCase();
+  let list=CARS.filter(c=>{
+    if(q&&!((c.name||'')+' '+(c.brand||'')+' '+(c.model||'')+' '+(c.desc||'')).toLowerCase().includes(q))return false;
+    if(+c.price>F.max)return false;
+    if(F.brands.length&&!F.brands.includes(c.brand))return false;
+    if(F.fuels.length&&!F.fuels.includes(c.fuel))return false;
+    if(F.trans&&c.transmission!==F.trans)return false;
+    if(F.cond&&c.condition!==F.cond)return false;
+    if(F.featured&&!c.featured)return false;
+    if(F.yFrom&&+c.year<F.yFrom)return false;
+    if(F.yTo&&+c.year>F.yTo)return false;
+    return true;
+  });
+  switch(F.sort){
+    case 'price-asc':list.sort((a,b)=>a.price-b.price);break;
+    case 'price-desc':list.sort((a,b)=>b.price-a.price);break;
+    case 'year':list.sort((a,b)=>b.year-a.year);break;
+    case 'rate':list.sort((a,b)=>(b.rate||0)-(a.rate||0));break;
+  }
+  $('count').innerHTML=`<b>${list.length}</b> سيارة متاحة`;
+  if(!list.length){$('grid').innerHTML=`<div class="empty"><div>🔍</div><p>لا توجد سيارات مطابقة</p></div>`;return}
+  $('grid').innerHTML=list.map(cardHTML).join('');
+}
+
+function cardHTML(c){
+  const fav=FAVS.includes(c.id),isSold=c.status==='sold',isRes=c.status==='reserved';
+  const off=c.oldPrice&&+c.oldPrice>+c.price?Math.round((1-c.price/c.oldPrice)*100):0;
+  const cond=c.condition==='new'?'<span class="badge new">جديد</span>':'<span class="badge used">مستعمل</span>';
+  const status=isSold?'<span class="status sold">مباع</span>':isRes?'<span class="status res">محجوز</span>':'';
+  
+  const imgs = Array.isArray(c.images) ? c.images : [];
+  const firstImg = imgs.length > 0 ? imgs[0] : null;
+  
+  return `<article class="card" onclick="openCar(${c.id})">
+    <div class="thumb">
+      <span class="emoji">${c.emoji||'🚗'}</span>
+      ${firstImg?`<img src="${esc(firstImg)}" loading="lazy" onerror="this.remove()">`:''}
+      ${imgs.length>1?`<span class="img-count">📷 ${imgs.length}</span>`:''}
+      ${cond}
+      <button class="fav ${fav?'on':''}" onclick="event.stopPropagation();toggleFav(${c.id})">${fav?'❤️':'🤍'}</button>
+      ${status}
+      ${off?`<span class="off">-${off}%</span>`:''}
+    </div>
+    <div class="cbody">
+      <div class="cbrand">${esc(c.brand||'')} · ${esc(c.model||'')}</div>
+      <h3 class="cname">${esc(c.name)}</h3>
+      <div class="cmeta">
+        <span class="spec">📅 ${c.year||'-'}</span>
+        <span class="spec">🛣️ ${(+c.mileage||0).toLocaleString()} كم</span>
+        <span class="spec">${fuelIcon(c.fuel)} ${esc(c.fuel||'-')}</span>
+      </div>
+      <div class="cprice"><div class="price">${money(c.price)}${off?`<s>${money(c.oldPrice)}</s>`:''}</div></div>
+      <div class="cactions"><button class="btn-book" ${isSold?'disabled':''}>${isSold?'غير متاح':'احجز تجربة'}</button></div>
+    </div>
+  </article>`;
+}
+
+function toggleFav(id){
+  FAVS = FAVS.includes(id) ? FAVS.filter(x=>x!=id) : [...FAVS, id];
+  localStorage.setItem('autoelite_favs', JSON.stringify(FAVS));
+  updateFavCount(); renderFavs(); render();
+  const db=document.querySelector('#detailDrawer .dfav');
+  if(db&&+db.dataset.id===+id){const on=FAVS.includes(id);db.classList.toggle('on',on);db.textContent=on?'❤️':'🤍'}
+}
+function updateFavCount(){$('favCount').textContent=FAVS.length}
+
+function renderFavs(){
+  const list=CARS.filter(c=>FAVS.includes(c.id));
+  $('favBody').innerHTML=list.length?list.map(c=>{
+    const firstImg = (c.images && c.images.length) ? c.images[0] : null;
+    return `
+    <div class="fitem" onclick="openCar(${c.id})">
+      <div class="fthumb"><span>${c.emoji||'🚗'}</span>${firstImg?`<img src="${esc(firstImg)}" onerror="this.remove()">`:''}</div>
+      <div class="finfo"><b>${esc(c.name)}</b><span>${money(c.price)}</span></div>
+      <button class="fdel" onclick="event.stopPropagation();toggleFav(${c.id})">✕</button>
+    </div>`}).join(''):'<div class="cempty"><div>🤍</div><p>قائمة المفضلة فارغة</p></div>';
+}
+
+function openCar(id){
+  const c=CARS.find(x=>x.id==id);if(!c)return;
+  CURRENT=id;const fav=FAVS.includes(id);
+  const feats=(Array.isArray(c.features)?c.features:[]).map(f=>`<span class="feat">✓ ${esc(f)}</span>`).join('');
+  
+  const imgs = Array.isArray(c.images) ? c.images : [];
+  const galleryHTML = imgs.length ? `
+    <div class="dimg">
+      <img id="mainImg" src="${esc(imgs[0])}" onerror="this.remove()">
+      ${imgs.length>1?`<div class="thumbs">${imgs.map((u,i)=>`
+        <img src="${esc(u)}" class="${i===0?'active':''}" onclick="document.getElementById('mainImg').src='${esc(u)}';document.querySelectorAll('.thumbs img').forEach(x=>x.classList.remove('active'));this.classList.add('active')">
+      `).join('')}</div>`:''}
+      <button class="dfav ${fav?'on':''}" data-id="${c.id}" onclick="toggleFav(${c.id})">${fav?'❤️':'🤍'}</button>
+    </div>` : `<div class="dimg"><span class="demoji">${c.emoji||'🚗'}</span><button class="dfav ${fav?'on':''}" data-id="${c.id}" onclick="toggleFav(${c.id})">${fav?'❤️':'🤍'}</button></div>`;
+
+  const videoHTML = c.video_url ? `
+    <div class="video-wrap">
+      <video controls playsinline preload="metadata">
+        <source src="${esc(c.video_url)}">
+      </video>
+    </div>` : '';
+
+  $('detailBody').innerHTML=`
+    ${galleryHTML}
+    <div class="dcontent">
+      ${videoHTML}
+      <div class="cbrand">${esc(c.brand||'')} · ${esc(c.model||'')}</div>
+      <h2>${esc(c.name)}</h2>
+      <div class="dprice">${money(c.price)}${c.oldPrice&&+c.oldPrice>+c.price?`<s>${money(c.oldPrice)}</s>`:''}</div>
+      <div class="specgrid">
+        <div><span>السنة</span><b>${c.year||'-'}</b></div>
+        <div><span>المسافة</span><b>${(+c.mileage||0).toLocaleString()} كم</b></div>
+        <div><span>الوقود</span><b>${esc(c.fuel||'-')}</b></div>
+        <div><span>ناقل الحركة</span><b>${esc(c.transmission||'-')}</b></div>
+        <div><span>اللون</span><b>${esc(c.color||'-')}</b></div>
+        <div><span>الحالة</span><b>${c.condition==='new'?'جديد':'مستعمل'}</b></div>
+      </div>
+      ${c.desc?`<p class="ddesc">${esc(c.desc)}</p>`:''}
+      ${feats?`<div class="feats">${feats}</div>`:''}
+      <div class="bookbox">
+        <h3>احجز تجربة قيادة</h3>
+        <div class="bform">
+          <input id="bName" placeholder="الاسم الكامل *">
+          <input id="bPhone" placeholder="رقم الهاتف / واتساب *" inputmode="tel">
+          <input id="bDate" type="date" title="التاريخ المفضل">
+          <textarea id="bNotes" rows="2" placeholder="ملاحظات (اختياري)"></textarea>
+          <button class="pay" onclick="bookCar(${c.id})">تأكيد الحجز</button>
+        </div>
+      </div>
+    </div>`;
+  $('detailDrawer').classList.add('open');$('detailPnl').scrollTop=0;
+}
+
+async function bookCar(id){
+  const c=CARS.find(x=>x.id==id);if(!c)return;
+  const name=$('bName').value.trim(),phone=$('bPhone').value.trim(),date=$('bDate').value,notes=$('bNotes').value.trim();
+  if(name.length<2)return toast('أدخل اسمك الكامل','err');
+  if(!/^[+\d][\d\s\-]{7,15}$/.test(phone))return toast('رقم هاتف غير صحيح','err');
+  
+  const btn = document.querySelector('.bookbox .pay');
+  btn.disabled = true; btn.textContent = 'جارٍ الإرسال...';
+  
+  try {
+    const { data, error } = await sb.from('bookings').insert([{
+      car_id: c.id, car_name: c.name, car_brand: c.brand, price: c.price,
+      customer: name, phone: phone, pref_date: date, notes: notes, status: 'جديد'
+    }]).select().single();
+    
+    if (error) throw error;
+    toast('تم استلام حجزك ✓','ok');
+    
+    const wa=(SETTINGS.whatsapp||'').replace(/\D/g,'');
+    const msg=encodeURIComponent(`حجز تجربة قيادة\nرقم الحجز: ${data.id}\nالسيارة: ${data.car_name}\nالاسم: ${data.customer}\nالهاتف: ${data.phone}`);
+    
+    document.querySelector('.bookbox').innerHTML=`<div class="bsuccess">
+      <div class="okicon">✓</div><h3>تم استلام حجزك!</h3>
+      <p>رقم الحجز: <b>#${String(data.id).slice(-6)}</b></p><p>سنتواصل معك لتأكيد الموعد.</p>
+      ${wa?`<a class="pay wa" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener">متابعة عبر واتساب</a>`:''}
+      <button class="pay ghost" onclick="closeAll()">إغلاق</button></div>`;
+  } catch (e) {
+    toast('فشل الحجز: ' + e.message, 'err');
+    btn.disabled = false; btn.textContent = 'تأكيد الحجز';
+  }
+}
+
+boot();
+</script>
+</body></html>
